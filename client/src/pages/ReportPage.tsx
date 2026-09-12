@@ -2,10 +2,11 @@ import { useState, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import {
   Send, Mic, MapPin, Sparkles, Brain, Crosshair, ShieldAlert,
-  Check, AlertCircle, Play, Type, Image as ImageIcon,
+  Check, AlertCircle, Play, Type, Image as ImageIcon, ListChecks,
 } from "lucide-react";
 import { classifyReport, listKnownLocations, getLocationCoords } from "../lib/classifier";
 import { computeIrse } from "../lib/risk-engine";
+import { addUserReport, generateReportId } from "../lib/store";
 import { REPORT_TYPE_LABELS, type ReportType, type Report } from "../types";
 
 const DEMO_SCRIPT = "Il y a beaucoup d'eau sur la voie principale à Agla depuis ce matin. Niveau grave, plusieurs maisons inondées. Urgence!";
@@ -44,9 +45,9 @@ export default function ReportPage() {
     if (!text.trim() || !analysis) return;
     const locCoords = getLocationCoords(location) || { lat: 6.3650, lng: 2.4180, city: "Cotonou" };
 
-    // Compute IRSE for this report (alone, but with realistic factors)
-    const tempReport: Report = {
-      id: `EC-${Date.now()}`,
+    // Créer le signalement
+    const newReport: Report = {
+      id: generateReportId(),
       type: analysis.type,
       title: text.slice(0, 60),
       description: text,
@@ -57,19 +58,24 @@ export default function ReportPage() {
         lng: locCoords.lng,
       },
       date: new Date().toISOString(),
-      status: "new",
+      status: "new" as const,
       reporter: reporter || "Anonyme",
       source: "citizen",
       riskScore: 0,
       riskLevel: "low",
       riskFactors: [],
     };
-    const irse = computeIrse([tempReport]);
-    tempReport.riskScore = irse.score;
-    tempReport.riskLevel = irse.level;
-    tempReport.riskFactors = irse.factors;
 
-    setSubmittedReport(tempReport);
+    // Calculer l'IRSE
+    const irse = computeIrse([newReport]);
+    newReport.riskScore = irse.score;
+    newReport.riskLevel = irse.level;
+    newReport.riskFactors = irse.factors;
+
+    // SAUVEGARDER dans localStorage — le signalement persiste !
+    addUserReport(newReport);
+
+    setSubmittedReport(newReport);
     setSubmitted(true);
   }
 
@@ -388,6 +394,13 @@ function ReportSuccess({ report, onReset }: { report: Report; onReset: () => voi
           <MapPin size={18} /> Voir sur la carte
         </Link>
         <Link
+          to="/my-reports"
+          className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold border"
+          style={{ background: "var(--surface)", borderColor: "var(--border)", color: "var(--text)" }}
+        >
+          <ListChecks size={18} /> Mes signalements
+        </Link>
+        <Link
           to="/dashboard"
           className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold border"
           style={{ background: "var(--surface)", borderColor: "var(--border)", color: "var(--text)" }}
@@ -401,6 +414,15 @@ function ReportSuccess({ report, onReset }: { report: Report; onReset: () => voi
         >
           <Send size={18} /> Nouveau
         </button>
+      </div>
+
+      {/* Confirmation de persistance */}
+      <div
+        className="mt-4 rounded-xl p-3 border text-xs flex items-center gap-2"
+        style={{ background: "rgba(34,197,94,0.08)", borderColor: "rgba(34,197,94,0.3)", color: "#22c55e" }}
+      >
+        <Check size={14} />
+        Votre signalement a été <strong>sauvegardé dans votre navigateur</strong> et apparaîtra sur la carte et le dashboard. Il persistera entre les sessions sur cet appareil.
       </div>
     </div>
   );

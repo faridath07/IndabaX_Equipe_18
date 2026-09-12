@@ -2,12 +2,13 @@ import { useState, useEffect } from "react";
 import { Routes, Route, Link, NavLink, useLocation } from "react-router-dom";
 import {
   Home, MapPin, BarChart3, Send, Info, Menu, X, Moon, Sun,
-  Play, Github, ExternalLink,
+  Play, Github, ExternalLink, ListChecks,
 } from "lucide-react";
 import HomePage from "./pages/HomePage";
 import ReportPage from "./pages/ReportPage";
 import MapPage from "./pages/MapPage";
 import DashboardPage from "./pages/DashboardPage";
+import MyReportsPage from "./pages/MyReportsPage";
 import AboutPage from "./pages/AboutPage";
 
 type Theme = "dark" | "light";
@@ -29,6 +30,7 @@ const NAV_ITEMS = [
   { to: "/report", label: "Signaler", icon: Send },
   { to: "/map", label: "Carte", icon: MapPin },
   { to: "/dashboard", label: "Dashboard", icon: BarChart3 },
+  { to: "/my-reports", label: "Mes signalements", icon: ListChecks },
   { to: "/about", label: "À propos", icon: Info },
 ];
 
@@ -167,6 +169,7 @@ export default function App() {
           <Route path="/report" element={<ReportPage />} />
           <Route path="/map" element={<MapPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/my-reports" element={<MyReportsPage />} />
           <Route path="/about" element={<AboutPage />} />
         </Routes>
       </main>

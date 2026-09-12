@@ -7,13 +7,15 @@ import {
   Activity, Droplets, Trash2, ShieldAlert, Crosshair, MapPin,
   AlertCircle, TrendingUp, ListChecks,
 } from "lucide-react";
-import { generateDemoReports, computeZoneRisks } from "../lib/demo-data";
+import { getAllReports } from "../lib/store";
+import { computeZoneRisks } from "../lib/demo-data";
 import { REPORT_TYPE_LABELS, RISK_LEVELS, type ReportType } from "../types";
 
 const COLORS = ["#22c55e", "#eab308", "#f97316", "#dc2626", "#a78bfa"];
 
 export default function DashboardPage() {
-  const reports = useMemo(() => generateDemoReports(), []);
+  // Utilise getAllReports() qui fusionne démo + signalements utilisateur persistés
+  const reports = useMemo(() => getAllReports(), []);
   const zones = useMemo(() => computeZoneRisks(reports), [reports]);
 
   // KPIs

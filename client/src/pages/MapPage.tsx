@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { MapContainer, TileLayer, CircleMarker, Popup, Tooltip } from "react-leaflet";
-import { generateDemoReports } from "../lib/demo-data";
+import { getAllReports } from "../lib/store";
 import { REPORT_TYPE_LABELS, RISK_LEVELS, type ReportType } from "../types";
 import { Filter, MapPin } from "lucide-react";
 
@@ -17,11 +17,14 @@ const TYPE_FILTERS: { value: ReportType | "all"; label: string; icon: string }[]
 ];
 
 export default function MapPage() {
-  const reports = useMemo(() => generateDemoReports(), []);
+  // Utilise getAllReports() qui fusionne démo + signalements utilisateur persistés
+  const reports = useMemo(() => getAllReports(), []);
   const [filter, setFilter] = useState<ReportType | "all">("all");
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const filtered = filter === "all" ? reports : reports.filter((r) => r.type === filter);
+
+  const userCount = reports.filter((r) => r.source === "citizen").length;
 
   return (
     <div className="animate-fade-in">
@@ -32,7 +35,13 @@ export default function MapPage() {
           </div>
           <h1 className="text-3xl font-bold mb-2">Carte des signalements environnementaux</h1>
           <p style={{ color: "var(--text-secondary)" }}>
-            {filtered.length} signalement(s) — cliquez sur un point pour voir le détail et le score IRSE.
+            {filtered.length} signalement(s) affichés
+            {userCount > 0 && (
+              <span className="ml-2 px-2 py-0.5 rounded text-xs font-semibold" style={{ background: "var(--accent-glow)", color: "var(--accent)" }}>
+                {userCount} soumis par les citoyens
+              </span>
+            )}
+            — cliquez sur un point pour voir le détail et le score IRSE.
           </p>
         </div>
 
@@ -84,13 +93,14 @@ export default function MapPage() {
                   pathOptions={{
                     color: level.color,
                     fillColor: level.color,
-                    fillOpacity: 0.7,
-                    weight: 2,
+                    fillOpacity: r.source === "citizen" ? 0.9 : 0.6,
+                    weight: r.source === "citizen" ? 3 : 2,
                   }}
                   eventHandlers={{ click: () => setSelectedId(r.id) }}
                 >
                   <Tooltip direction="top" offset={[0, -8]}>
                     <strong>{REPORT_TYPE_LABELS[r.type].fr}</strong> — IRSE {r.riskScore}/100
+                    {r.source === "citizen" && " 📌 Citoyen"}
                   </Tooltip>
                   <Popup>
                     <div style={{ minWidth: 220 }}>
@@ -115,7 +125,8 @@ export default function MapPage() {
                         </span>
                       </div>
                       <div style={{ fontSize: 11, color: "#888" }}>
-                        Source: {r.source === "demo" ? "Démo" : r.source} · Signaleur: {r.reporter}
+                        Source: {r.source === "citizen" ? "🗑️ Citoyen (persisté)" : r.source === "demo" ? "Démo" : r.source}
+                        <br />Signaleur: {r.reporter} · Statut: {r.status === "new" ? "Nouveau" : r.status === "in_progress" ? "En cours" : "Traité"}
                       </div>
                     </div>
                   </Popup>
@@ -134,6 +145,10 @@ export default function MapPage() {
               <span>{lvl.label} ({lvl.min}-{lvl.max})</span>
             </div>
           ))}
+          <span className="ml-4 flex items-center gap-1.5" style={{ color: "var(--text-muted)" }}>
+            <span className="w-3 h-3 rounded-full border-2" style={{ borderColor: "var(--accent)", background: "var(--accent-glow)" }} />
+            📌 = soumis par un citoyen
+          </span>
         </div>
 
         {/* Liste détaillée */}
@@ -156,7 +171,14 @@ export default function MapPage() {
                     <div className="flex items-center gap-2">
                       <span className="text-xl">{REPORT_TYPE_LABELS[r.type].icon}</span>
                       <div>
-                        <div className="font-semibold text-sm">{r.title}</div>
+                        <div className="font-semibold text-sm">
+                          {r.title}
+                          {r.source === "citizen" && (
+                            <span className="ml-2 px-1.5 py-0.5 rounded text-[10px] font-mono" style={{ background: "var(--accent-glow)", color: "var(--accent)" }}>
+                              📌 Vôtre
+                            </span>
+                          )}
+                        </div>
                         <div className="text-xs" style={{ color: "var(--text-muted)" }}>
                           {r.location.neighborhood}, {r.location.city}
                         </div>
@@ -174,6 +196,9 @@ export default function MapPage() {
                   </div>
                   <div className="text-xs mt-2 flex items-center gap-2" style={{ color: "var(--text-muted)" }}>
                     <MapPin size={10} /> {new Date(r.date).toLocaleDateString("fr-FR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
+                    <span className="ml-auto px-1.5 py-0.5 rounded text-[10px]" style={{ background: "var(--surface)" }}>
+                      {r.status === "new" ? "Nouveau" : r.status === "in_progress" ? "En cours" : "Traité"}
+                    </span>
                   </div>
                 </button>
               );

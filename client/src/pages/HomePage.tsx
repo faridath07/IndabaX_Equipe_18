@@ -2,16 +2,19 @@ import { Link } from "react-router-dom";
 import {
   Send, MapPin, BarChart3, Play, ArrowRight, Mic, Brain,
   Crosshair, ShieldAlert, Users, Activity, Droplets, Trash2,
+  ListChecks,
 } from "lucide-react";
 import { useMemo } from "react";
-import { generateDemoReports, computeZoneRisks } from "../lib/demo-data";
+import { getAllReports } from "../lib/store";
+import { computeZoneRisks } from "../lib/demo-data";
 import { RISK_LEVELS } from "../types";
 
 export default function HomePage() {
-  const reports = useMemo(() => generateDemoReports(), []);
+  const reports = useMemo(() => getAllReports(), []);
   const zones = useMemo(() => computeZoneRisks(reports), [reports]);
 
   const totalReports = reports.length;
+  const userReports = reports.filter((r) => r.source === "citizen").length;
   const criticalZones = zones.filter((z) => z.level === "critical").length;
   const highZones = zones.filter((z) => z.level === "high").length;
   const avgIrse = zones.length > 0
@@ -97,6 +100,18 @@ export default function HomePage() {
             <StatCard label="Zones à risque élevé" value={highZones} icon={Crosshair} color="#f97316" />
             <StatCard label="IRSE moyen" value={`${avgIrse}/100`} icon={BarChart3} color="#22c55e" />
           </div>
+
+          {/* User reports indicator */}
+          {userReports > 0 && (
+            <Link
+              to="/my-reports"
+              className="inline-flex items-center gap-2 mt-6 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all hover:scale-105 border"
+              style={{ background: "var(--accent-glow)", borderColor: "var(--accent)", color: "var(--accent)" }}
+            >
+              <ListChecks size={16} />
+              Vous avez {userReports} signalement(s) enregistré(s) → Voir mes signalements
+            </Link>
+          )}
         </div>
       </section>
 
