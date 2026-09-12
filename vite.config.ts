@@ -37,6 +37,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "node",
+    root: __dirname,
     include: ["tests/**/*.test.ts"],
     alias: [
       { find: "@shared", replacement: path.resolve(__dirname, "shared") },
