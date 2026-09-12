@@ -1,0 +1,123 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #0a0f0d;
+  --bg-elev: #0f1614;
+  --bg-card: #131c19;
+  --surface: #1a2522;
+  --border: #1f2b27;
+  --border-hover: #2c3b35;
+  --text: #f0f4f2;
+  --text-secondary: #9ca8a3;
+  --text-muted: #5a6863;
+  --accent: #22c55e;
+  --accent-light: #4ade80;
+  --accent-glow: rgba(34, 197, 94, 0.14);
+  --cyan: #06b6d4;
+  --amber: #fbbf24;
+  --orange: #f97316;
+  --red: #dc2626;
+}
+
+html.light {
+  --bg: #f7faf8;
+  --bg-elev: #ffffff;
+  --bg-card: #ffffff;
+  --surface: #f1f5f3;
+  --border: #e2e8e5;
+  --border-hover: #cbd5d0;
+  --text: #0a0f0d;
+  --text-secondary: #475569;
+  --text-muted: #94a3a0;
+  --accent: #16a34a;
+  --accent-light: #22c55e;
+  --accent-glow: rgba(22, 163, 74, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Leaflet overrides */
+.leaflet-container {
+  background: var(--surface);
+  font-family: "Inter", sans-serif;
+}
+
+.leaflet-popup-content-wrapper {
+  background: var(--bg-card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.leaflet-popup-tip {
+  background: var(--bg-card);
+}
+
+.leaflet-popup-content {
+  margin: 14px 16px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-hover);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse-ring {
+  0% { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+.animate-fade-in { animation: fadeIn 0.5s ease-out; }
+.animate-slide-up { animation: slideUp 0.4s ease-out; }
+
+/* Custom marker pulse */
+.risk-marker-pulse {
+  position: relative;
+}
+.risk-marker-pulse::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: currentColor;
+  transform: translate(-50%, -50%);
+  animation: pulse-ring 1.8s ease-out infinite;
+}

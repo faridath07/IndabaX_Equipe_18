@@ -1,16 +1,52 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-    <meta name="theme-color" content="#176b59" />
-    <title>EcosIA — Eco-santé citoyenne au Bénin</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet" />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EcosIA — Intelligence citoyenne pour l'environnement et la santé au Bénin</title>
+  <meta name="description" content="EcosIA / GbéWé — Plateforme d'intelligence citoyenne pour détecter précocement les risques environnementaux et sanitaires au Bénin. Hackathon IndabaX Bénin 2026." />
+  <meta name="keywords" content="EcosIA, GbéWé, IndabaX, Bénin, intelligence citoyenne, risque sanitaire, environnement, inondation, déchets, Fon, IRSE" />
+  <meta name="author" content="Équipe 18 — IndabaX Bénin 2026" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="EcosIA — Intelligence citoyenne pour l'environnement et la santé au Bénin" />
+  <meta property="og:description" content="Les citoyens signalent, l'IA analyse, le risque est calculé, la carte s'illumine. IndabaX Bénin 2026." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://faridath07.github.io/IndabaX_Equipe_18/" />
+  <meta property="og:image" content="https://faridath07.github.io/IndabaX_Equipe_18/og-image.svg" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="EcosIA — Intelligence citoyenne pour le Bénin" />
+  <meta name="twitter:description" content="Détecter précocement les risques environnementaux et sanitaires via les signalements citoyens." />
+
+  <link rel="canonical" href="https://faridath07.github.io/IndabaX_Equipe_18/" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "EcosIA / GbéWé",
+    "description": "Plateforme d'intelligence citoyenne pour détecter précocement les risques environnementaux et sanitaires au Bénin.",
+    "applicationCategory": "EnvironmentalMonitoring",
+    "operatingSystem": "Web",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "XOF" },
+    "author": { "@type": "Organization", "name": "Équipe 18 — IndabaX Bénin 2026" }
+  }
+  </script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="./src/main.tsx"></script>
+</body>
 </html>

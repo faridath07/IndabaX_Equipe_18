@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://faridath07.github.io/IndabaX_Equipe_18/sitemap.xml
